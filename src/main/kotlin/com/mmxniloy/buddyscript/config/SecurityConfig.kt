@@ -3,7 +3,6 @@ package com.mmxniloy.buddyscript.config
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -19,7 +18,8 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests({ auth ->
                 auth
-                    .anyRequest().permitAll()
+                    .requestMatchers("/docs/**", "/swagger-ui/**").permitAll()
+                    .anyRequest().authenticated()
             }
             )
             .oauth2ResourceServer({ oauth2 ->
