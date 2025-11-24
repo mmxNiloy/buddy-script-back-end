@@ -1,6 +1,7 @@
 package com.mmxniloy.buddyscript.features.reaction.controller
 
 import com.mmxniloy.buddyscript.features.reaction.dto.ReactionDto
+import com.mmxniloy.buddyscript.features.reaction.service.CommentReactionService
 import com.mmxniloy.buddyscript.features.reaction.service.PostReactionService
 import com.mmxniloy.buddyscript.features.reaction.util.ReactionType
 import jakarta.validation.constraints.NotEmpty
@@ -18,38 +19,38 @@ import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 
 @RestController
-@RequestMapping("/api/v1/reaction")
+@RequestMapping("/api/v1/reaction/comment")
 @Validated
-class PostReactionController(
-    private val postReactionService: PostReactionService
+class CommentReactionController(
+    private val commentReactionService: CommentReactionService
 ) {
-    @GetMapping("/post/{postId}")
-    fun getReactionsOfAPost(@PathVariable @NotEmpty postId: String,
-                            @RequestParam @NotNull page: Int?,
-                            @RequestParam @NotNull pageSize: Int?): Page<ReactionDto> {
-        val reactions = postReactionService.getReactionsOfAPost(postId, page, pageSize)
+    @GetMapping("/{commentId}")
+    fun getReactionsOfAPost(@PathVariable @NotEmpty commentId: String,
+                            @RequestParam page: Int?,
+                            @RequestParam pageSize: Int?): Page<ReactionDto> {
+        val reactions = commentReactionService.getReactionsOfAComment(commentId, page, pageSize)
 
         return reactions
     }
 
-    @GetMapping("/my/post/{postId}")
-    fun getMyReactionsOfAPost(@PathVariable @NotEmpty postId: String, principal: Principal): ReactionDto? {
+    @GetMapping("/my/{commentId}")
+    fun getMyReactionsOfAPost(@PathVariable @NotEmpty commentId: String, principal: Principal): ReactionDto? {
         val subject = principal.name
 
-        val myReaction = postReactionService.getMyReactionsOfAPost(postId, subject)
+        val myReaction = commentReactionService.getMyReactionsOfAComment(commentId, subject)
 
         return myReaction
     }
 
-    @PutMapping("/post/{postId}/{reactionType}")
+    @PutMapping("/{commentId}/{reactionType}")
     fun reactToPost(
-        @PathVariable @NotEmpty postId: String,
+        @PathVariable @NotEmpty commentId: String,
         principal: Principal,
         @PathVariable @NotNull reactionType: ReactionType
     ): ResponseEntity<Void> {
         val subject = principal.name
 
-        postReactionService.reactToPost(postId, subject, reactionType)
+        commentReactionService.reactToComment(commentId, subject, reactionType)
 
         return ResponseEntity.noContent().build()
     }

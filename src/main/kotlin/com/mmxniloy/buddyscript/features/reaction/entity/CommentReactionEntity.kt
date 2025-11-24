@@ -2,6 +2,7 @@ package com.mmxniloy.buddyscript.features.reaction.entity
 
 import com.mmxniloy.buddyscript.features.comment.CommentEntity
 import com.mmxniloy.buddyscript.features.profile.ProfileEntity
+import com.mmxniloy.buddyscript.features.reaction.dto.ReactionDto
 import com.mmxniloy.buddyscript.features.reaction.util.ReactionType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -29,7 +30,7 @@ data class CommentReactionEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID? = null,
 
-    val type: ReactionType,
+    var type: ReactionType,
 
     @Column(updatable = false)
     @CreatedDate
@@ -42,4 +43,13 @@ data class CommentReactionEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", referencedColumnName = "id")
     val comment: CommentEntity,
-)
+) {
+    fun toDto(): ReactionDto {
+        return ReactionDto(
+            id = id.toString(),
+            type = type.name,
+            createdAt,
+            author = author.toDto()
+        )
+    }
+}

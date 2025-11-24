@@ -69,15 +69,18 @@ data class PostEntity(
         var recentReactions: List<ReactionDto> = emptyList()
         if (reactions.isNotEmpty()) {
             recentReactions = reactions
+                .takeLast(5.coerceAtMost(reactions.size))
                 .map { it -> it.toDto() }
-            recentReactions = recentReactions.subList(0, 20.coerceAtMost(recentReactions.size))
+            recentReactions = recentReactions.subList(0, 5.coerceAtMost(recentReactions.size)).sortedByDescending { it.createdAt }
         }
 
         var recentComments: List<CommentDto> = emptyList()
         if (comments.isNotEmpty()) {
             recentComments = comments
+                .filter { it.parentComment == null }
+                .takeLast(3.coerceAtMost(comments.size))
                 .map { it -> it.toDto() }
-            recentComments = recentComments.subList(0, 20.coerceAtMost(recentComments.size))
+            recentComments = recentComments.subList(0, 3.coerceAtMost(recentComments.size)).sortedByDescending { it.createdAt }
         }
 
         return PostMetadataDto(
