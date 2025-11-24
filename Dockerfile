@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 
 # Use build args for flexibility
-ARG JDK_VERSION=23
+ARG JDK_VERSION=25
 ARG APP_NAME=app
 
 ################################################################################
 # Stage 1: Build the application
-FROM gradle:9.1-jdk${JDK_VERSION} AS build
+FROM gradle:9.2.1-jdk${JDK_VERSION} AS build
 
 # Set working directory
 WORKDIR /usr/src/app
