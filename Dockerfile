@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use build args for flexibility
-ARG JDK_VERSION=21
+ARG JDK_VERSION=23
 ARG APP_NAME=app
 
 ################################################################################
